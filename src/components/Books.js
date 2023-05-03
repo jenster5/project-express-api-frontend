@@ -1,20 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import styled from 'styled-components';
 
-const BookTitlesCarousel = () => {
-  const [bookTitles, setBookTitles] = useState([]);
-
-  useEffect(() => {
-    fetch('/book-titles')
-      .then((response) => response.json())
-      .then((data) => {
-        setBookTitles(data.body)
-      })
-      .catch((error) => console.log(error));
-  }, []);
-
+const BookTitlesCarousel = ({ bookTitles }) => {
   const responsiveBooks = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -36,9 +25,9 @@ const BookTitlesCarousel = () => {
   return (
     <BooksWrapper>
       <Carousel responsive={responsiveBooks}>
-        {bookTitles.map((title, book) => (
-          <div className="Books-card" key={book.bookID}>
-            {title}
+        {bookTitles.map((bookTitle) => (
+          <div className="Books-card" key={bookTitle}>
+            {bookTitle}
           </div>
         ))}
       </Carousel>
