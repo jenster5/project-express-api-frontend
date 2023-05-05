@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
-import { useDispatch } from 'react-redux';
-import { startBookstore } from 'reducers/Bookstore';
+import { useDispatch, useSelector } from 'react-redux';
+import { AuthorSearch, startBookstore } from 'reducers/Bookstore';
 import BookTitlesCarousel from './Books';
 import { SearchFunction } from './Search';
 
@@ -10,23 +10,25 @@ const WelcomeScreen = () => {
 
   useEffect(() => {
     dispatch(startBookstore());
+    dispatch(AuthorSearch());
   }, [dispatch]);
 
-  const [books, setBooks] = useState([]);
-
-  useEffect(() => {
-    fetch('https://project-express-api-7co7srd3ia-lz.a.run.app')
-      .then((response) => response.json())
-      .then((data) => setBooks(data))
-      .catch((error) => console.log(error));
-  }, []);
+  const books = useSelector((store) => store.bookstore.bookCarousel)
+  const authors = useSelector((store) => store.bookstore.AuthorSearch)
 
   return (
     <WelcomeScreenWrapper>
-      <h1>Welcome to Bargain Books</h1>
-      <h2>Please shop around</h2>
-      <BookTitlesCarousel key={books.bookID} bookTitles={books.map((book) => book.title)} />
-      <SearchFunction />
+      <OuterHeaderWrapper>
+        <HeaderWrapper>
+          <h1>Welcome to Bargain Books</h1>
+          <p>Let us help you find your next adventure!</p>
+        </HeaderWrapper>
+      </OuterHeaderWrapper>
+      <CarouselWrapper>
+        <h1> Scroll here to see whats in stock </h1>
+        <BookTitlesCarousel bookTitles={books} />
+      </CarouselWrapper>
+      <SearchFunction authorSearch={authors} />
     </WelcomeScreenWrapper>
   )
 };
@@ -36,5 +38,56 @@ export default WelcomeScreen;
 const WelcomeScreenWrapper = styled.section`
 height: 100vh;
 width:100vw;
+background-image: url(./assets/bookstore.jpg);
+background-size: cover;
+background-repeat: no-repeat;
+text-align: center;
+display: flex;
+flex-direction: column;
 `
+const OuterHeaderWrapper = styled.section`
+display: flex;
+justify-content: center;
+align-items: center;
+margin-top:10%;
+`
+const HeaderWrapper = styled.section`
+background:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)); 
+text-align:center;
+color:white;
+line-height: 2.5rem;
+padding:15px;
+border: 5px solid rgba(255, 255, 255, 0.3);
+border-radius: 10px;
+box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+font-size: 2.5rem;
+
+p{
+  font-size: 1.9rem;
+}
+`
+const CarouselWrapper = styled.section`
+h1{
+  font-size: 2.5rem;
+  color:white;
+  margin-bottom: 5px;
+}
+.react-multi-carousel-track {
+  background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3)); 
+  color: lightgrey;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  font-size: 2.5rem;
+  gap:15px;
+
+  & > * {
+    background-image: url(./assets/bookcover.jpg);
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    padding: 5px;
+    height:250px;
+  
+    
+  }}
+`;
 
