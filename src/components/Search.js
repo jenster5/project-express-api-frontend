@@ -1,31 +1,43 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable operator-linebreak */
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { bookstore } from '../reducers/Bookstore'
-import { AuthorSearch } from './AuthorSearch'
-import { TitleSearch } from './TitleSearch'
 
 export const SearchFunction = () => {
-  const [books] = useState([])
   const [input, setInput] = useState('')
   const dispatch = useDispatch()
-  const authors = useSelector((store) => store.bookstore.authorSelect)
-  const bookSearchResult = useSelector((store) => store.bookstore.bookSearch)
+  const selectAuthors = useSelector((store) => store.bookstore.setAuthorSearch)
 
   const bookSearchInput = (e) => {
     e.preventDefault();
-    dispatch(bookstore.actions.setBookSearch(input))
+    dispatch(bookstore.actions.setAuthorSearch(input))
     setInput('')
   }
+  const [fetchedAuthors, setFetchedAuthors] = useState([])
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }
+    fetch('https://project-express-api-7co7srd3ia-lz.a.run.app/book-authors', options)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log('json', json);
+        setFetchedAuthors(json.body.authors)
+      })
+      .catch((error) => console.log(error))
+  })
 
   const selectAuthor = (event) => {
-    dispatch(bookstore.actions.setAuthorSelect(event.target.value))
+    dispatch(bookstore.actions.setFetchedAuthors(event.target.value))
   }
 
   return (
     <main>
-      {books &&
+      {selectAuthors &&
        <section className="container">
          <header>
            <h1>Welcome to Bargain Books </h1>
@@ -51,7 +63,7 @@ export const SearchFunction = () => {
              <label>Or Search for Authors</label>
              <select value="author" name="authors" id="authorList" onChange={selectAuthor} aria-label="authorList">
                <option defaultValue>Choose authors</option>
-               {books.map((item) => {
+               {fetchedAuthors.map((item) => {
                  return (
                    <option
                      key={item.bookID}
@@ -64,9 +76,6 @@ export const SearchFunction = () => {
            </div>
 
          </section>
-
-         {authors.length > 1 ? <AuthorSearch /> : ''}
-         {bookSearchResult.length > 1 ? <TitleSearch /> : ''}
        </section>}
     </main>
   )
