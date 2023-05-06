@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useDispatch, useSelector } from 'react-redux';
-import { AuthorSearch, startBookstore } from 'reducers/Bookstore';
+import { AuthorsSearch, startBookstore } from 'reducers/Bookstore';
 import BookTitlesCarousel from './Books';
 import { SearchFunction } from './Search';
+import { Footer } from './Footer';
 
 const WelcomeScreen = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(startBookstore());
-    dispatch(AuthorSearch());
+    dispatch(AuthorsSearch());
   }, [dispatch]);
 
   const books = useSelector((store) => store.bookstore.bookCarousel)
-  const authors = useSelector((store) => store.bookstore.AuthorSearch)
+  const authors = useSelector((store) => store.bookstore.authorsSearch)
 
   return (
     <WelcomeScreenWrapper>
@@ -28,7 +29,8 @@ const WelcomeScreen = () => {
         <h1> Scroll here to see whats in stock </h1>
         <BookTitlesCarousel bookTitles={books} />
       </CarouselWrapper>
-      <SearchFunction authorSearch={authors} />
+      <SearchFunction authorsSearch={authors} />
+      <Footer />
     </WelcomeScreenWrapper>
   )
 };
@@ -72,22 +74,20 @@ h1{
   color:white;
   margin-bottom: 5px;
 }
+
 .react-multi-carousel-track {
   background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.3)); 
   color: lightgrey;
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
   font-size: 2.5rem;
-  gap:15px;
+  gap:5px;
 
   & > * {
     background-image: url(./assets/bookcover.jpg);
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    border: 5px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
     padding: 5px;
     height:250px;
-  
-    
-  }}
-`;
+    }}`;
 

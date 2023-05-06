@@ -2,18 +2,21 @@
 /* eslint-disable operator-linebreak */
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 import { bookstore } from '../reducers/Bookstore'
 
 export const SearchFunction = () => {
-  const [input, setInput] = useState('')
-  const dispatch = useDispatch()
-  const selectAuthors = useSelector((store) => store.bookstore.setAuthorSearch)
+  const [input, setInput] = useState('');
+  // const [AuthorsSearch, setAuthorsSearch] = useState('');
+  const dispatch = useDispatch();
+  const authorsSearch = useSelector((store) => store.bookstore.authorsSearch);
 
   const bookSearchInput = (e) => {
     e.preventDefault();
-    dispatch(bookstore.actions.setAuthorSearch(input))
+    dispatch(bookstore.actions.setAuthorsSearch(input))
     setInput('')
-  }
+  };
+
   const [fetchedAuthors, setFetchedAuthors] = useState([])
   useEffect(() => {
     const options = {
@@ -31,13 +34,13 @@ export const SearchFunction = () => {
       .catch((error) => console.log(error))
   })
 
-  const selectAuthor = (event) => {
-    dispatch(bookstore.actions.setFetchedAuthors(event.target.value))
-  }
+  const handleAuthorSelect = (event) => {
+    dispatch(bookstore.actions.setAuthorsSearch(event.target.value))
+  };
 
   return (
-    <main>
-      {selectAuthors &&
+    <SearchWrapper>
+      {authorsSearch &&
        <section className="container">
          <header>
            <h1>Welcome to Bargain Books </h1>
@@ -45,7 +48,7 @@ export const SearchFunction = () => {
          </header>
 
          <section className="filter">
-           <div className="inputWrapper">
+           <InputWrapper>
              <form onSubmit={bookSearchInput}>
                <label>Search for Titles</label>
                <input
@@ -55,28 +58,41 @@ export const SearchFunction = () => {
                  placeholder="Search for your favorite book here"
                  value={input}
                  onChange={(event) => setInput(event.target.value)} />
-               <button type="submit" onClick={bookSearchInput}>Search</button>
+               <button type="submit">Search</button>
              </form>
-           </div>
+           </InputWrapper>
 
            <div className="selectWrapper">
              <label>Or Search for Authors</label>
-             <select value="author" name="authors" id="authorList" onChange={selectAuthor} aria-label="authorList">
+             <select value={authorsSearch} name="authors" id="authorsList" onChange={handleAuthorSelect} aria-label="authorsList">
                <option defaultValue>Choose authors</option>
-               {fetchedAuthors.map((item) => {
-                 return (
+               {fetchedAuthors.map((item) => (
+                 item.authors ? (
                    <option
                      key={item.bookID}
                      value={item.authors}>
                      {item.authors.replace('-', ', ')}
                    </option>
-                 )
-               })}
+                 ) : null
+               ))}
              </select>
            </div>
 
          </section>
        </section>}
-    </main>
+    </SearchWrapper>
   )
-}
+};
+
+const SearchWrapper = styled.section`
+display:flex;
+flex-direction:column;
+justify-content: center;
+align-items: center;
+
+`
+
+const InputWrapper = styled.section`
+width:100%;
+`
+

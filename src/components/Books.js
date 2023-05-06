@@ -14,7 +14,6 @@ const BookTitlesCarousel = () => {
     fetch('https://project-express-api-7co7srd3ia-lz.a.run.app/book-titles', options)
       .then((response) => response.json())
       .then((json) => {
-        // console.log('json', json);
         setFetchedBooks(json.body.title)
         // dispatch(bookstore.actions.setAuthorSearch(json.author));
       })
