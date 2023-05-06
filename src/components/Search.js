@@ -1,98 +1,49 @@
+/* eslint-disable react/jsx-closing-tag-location */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable operator-linebreak */
-import React, { useState, useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-import { bookstore } from '../reducers/Bookstore'
+import React from 'react'
+import styled from 'styled-components';
 
 export const SearchFunction = () => {
-  const [input, setInput] = useState('');
-  // const [AuthorsSearch, setAuthorsSearch] = useState('');
-  const dispatch = useDispatch();
-  const authorsSearch = useSelector((store) => store.bookstore.authorsSearch);
-
-  const bookSearchInput = (e) => {
-    e.preventDefault();
-    dispatch(bookstore.actions.setAuthorsSearch(input))
-    setInput('')
-  };
-
-  const [fetchedAuthors, setFetchedAuthors] = useState([])
-  useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }
-    fetch('https://project-express-api-7co7srd3ia-lz.a.run.app/book-authors', options)
-      .then((response) => response.json())
-      .then((json) => {
-        console.log('json', json);
-        setFetchedAuthors(json.body.authors)
-      })
-      .catch((error) => console.log(error))
-  })
-
-  const handleAuthorSelect = (event) => {
-    dispatch(bookstore.actions.setAuthorsSearch(event.target.value))
-  };
-
   return (
     <SearchWrapper>
-      {authorsSearch &&
-       <section className="container">
-         <header>
-           <h1>Welcome to Bargain Books </h1>
-           <p>Check out our stock of books for low prices </p>
-         </header>
-
-         <section className="filter">
-           <InputWrapper>
-             <form onSubmit={bookSearchInput}>
-               <label>Search for Titles</label>
-               <input
-                 id="bookSearchInput"
-                 required
-                 type="text"
-                 placeholder="Search for your favorite book here"
-                 value={input}
-                 onChange={(event) => setInput(event.target.value)} />
-               <button type="submit">Search</button>
-             </form>
-           </InputWrapper>
-
-           <div className="selectWrapper">
-             <label>Or Search for Authors</label>
-             <select value={authorsSearch} name="authors" id="authorsList" onChange={handleAuthorSelect} aria-label="authorsList">
-               <option defaultValue>Choose authors</option>
-               {fetchedAuthors.map((item) => (
-                 item.authors ? (
-                   <option
-                     key={item.bookID}
-                     value={item.authors}>
-                     {item.authors.replace('-', ', ')}
-                   </option>
-                 ) : null
-               ))}
-             </select>
-           </div>
-
-         </section>
-       </section>}
+      <InnerWrapper>
+        <h1>Search available API endpoints</h1>
+        <h3><a href="https://project-express-api-7co7srd3ia-lz.a.run.app">API</a></h3>
+        <h3>Books available <a href="https://project-express-api-7co7srd3ia-lz.a.run.app/book-titles">here</a></h3>
+        <h3>Author List <a href="https://project-express-api-7co7srd3ia-lz.a.run.app/book-authors">here</a></h3>
+        <h3>Books rated above 4  <a href="https://project-express-api-7co7srd3ia-lz.a.run.app/book-wellrated">here</a></h3>
+      </InnerWrapper>
     </SearchWrapper>
   )
 };
 
 const SearchWrapper = styled.section`
-display:flex;
-flex-direction:column;
+background:linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.5)); 
+display: flex;
 justify-content: center;
-align-items: center;
-
+color:white;
+line-height: 2.5rem;
+padding:15px;
+margin-top: 10px;
+a {
+    color: white;
+    text-decoration: none;
+    border-bottom: 1px solid white;
+    transition: border-bottom 0.2s;
+  }
+  a:hover {
+    border-bottom: 1px solid transparent;
+  }
 `
-
-const InputWrapper = styled.section`
-width:100%;
-`
+const InnerWrapper = styled.section`
+border: 10px solid rgba(255, 255, 255, 0.3);
+border-radius: 10px;
+box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+width:60%;
+h1{
+  font-size: 2.5rem;
+}
+h3{
+  font-size: 2rem;
+}`
 

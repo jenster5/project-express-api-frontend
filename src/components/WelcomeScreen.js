@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { useDispatch, useSelector } from 'react-redux';
-import { AuthorsSearch, startBookstore } from 'reducers/Bookstore';
+import { startBookstore } from 'reducers/Bookstore';
 import BookTitlesCarousel from './Books';
 import { SearchFunction } from './Search';
 import { Footer } from './Footer';
@@ -11,7 +11,6 @@ const WelcomeScreen = () => {
 
   useEffect(() => {
     dispatch(startBookstore());
-    dispatch(AuthorsSearch());
   }, [dispatch]);
 
   const books = useSelector((store) => store.bookstore.bookCarousel)
@@ -38,7 +37,6 @@ const WelcomeScreen = () => {
 export default WelcomeScreen;
 
 const WelcomeScreenWrapper = styled.section`
-height: 100vh;
 width:100vw;
 background-image: url(./assets/bookstore.jpg);
 background-size: cover;

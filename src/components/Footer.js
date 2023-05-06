@@ -4,10 +4,9 @@ import styled from 'styled-components';
 export const Footer = () => {
   return (
     <FooterWrapper>
-      <h3>Week 13 Technigo API Project </h3>
-      <ImageWrapper>
-        <img src="./assets/Mylogo.png" alt="my Logo" className="mylogo" />
-      </ImageWrapper>
+      <h3>Jennifers API Project </h3>
+      <h3>Technigo Bootcamp May 2023</h3>
+      <Image src="./assets/Mylogo.png" alt="my Logo" className="mylogo" />
     </FooterWrapper>
   )
 };
@@ -19,8 +18,6 @@ align-items: center;
 justify-content: center;
 color:silver;
 `
-const ImageWrapper = styled.image`
-.mylogo{
+const Image = styled.img`
 max-height: 100px;
-}
 `
